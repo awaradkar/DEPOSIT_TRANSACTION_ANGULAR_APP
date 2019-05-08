@@ -1,0 +1,281 @@
+<div class="jumbotron">
+  <div class="container">
+    <div class="col-md-12 mx-auto">
+      <h2>Withdrawal</h2>
+
+      <div name="formDiv" *ngIf="!searchOpen">
+        <form name="form" (ngSubmit)="f.form.valid && save(f)" #f="ngForm" novalidate>
+          <input type="hidden" class="form-control" name="active" [(ngModel)]="model.active" #active="ngModel" />
+          <div class="form-group row">
+            <div class="col-sm-4">
+              <label for="_orgName">Transaction Id</label>
+              <input type="text" class="form-control" name="txnId" placeholder="Transaction Id"
+                [(ngModel)]="model.txnId" #txnId="ngModel" required [disabled]="true" />
+            </div>
+            <div class="col-sm-4">
+              <label for="depositId">Withdrawal Id</label>
+              <input type="text" class="form-control" name="withdrawalId" placeholder="Withdrawal Id"
+                [(ngModel)]="model.withdrawalId" #withdrawalId="ngModel" required [disabled]="true" />
+            </div>
+            <div class="col-sm-4">
+              <label for="status">Status</label>
+              <input type="text" class="form-control" name="status" placeholder="Status" [(ngModel)]="model.status"
+                #status="ngModel" required [disabled]="true" />
+            </div>
+          </div>
+          <div class="form-group row">
+          <div class="col-sm-5" [ngClass]="{ 'has-error': f.submitted && !depositId.valid }">
+            <label for="depositId">Deposit Id</label>
+            <input type="text" class="form-control" name="depositId" placeholder="Deposit Id"
+              [(ngModel)]="model.depositId" #depositId="ngModel" required [disabled]="true" />
+            <div *ngIf="f.submitted && !depositId.valid && !disableFields" class="help-block">Deposit Id is
+              required</div>
+          </div>
+          <div class="col-sm-1">
+            <p *ngIf="!disableFields"><a (click)="selectDeposit()">Select</a></p>
+            <div *ngIf="openDepDiv" class="help-block pick-list">
+              <input type="text" (input)="onDepFilterChanged()" id="depQuickFilter" placeholder="quick filter..." />
+              <div style="height: 300px">
+              <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham"
+                [paginationAutoPageSize]="true" [pagination]="true" [rowData]="depRowData" [columnDefs]="depColumnDefs"
+                [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" (rowSelected)="onDepRowSelected()"
+                [rowSelection]="rowSelection" (gridReady)="onDepGridReady($event)">
+              </ag-grid-angular>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+
+          </div>
+        </div>
+          <div class="form-group row">
+            <div class="col-sm-6" [ngClass]="{ 'has-error': f.submitted && !warehouseCode.valid }">
+              <label for="warehouseCode">Warehouse Code</label>
+              <input type="text" class="form-control" name="warehouseCode" placeholder="Warehouse Code"
+                [(ngModel)]="model.warehouseCode" #warehouseCode="ngModel" required [disabled]="true" />
+              <div *ngIf="f.submitted && !warehouseCode.valid && !disableFields" class="help-block">Warehouse Code is
+                required</div>
+            </div>
+          
+            <div class="col-sm-6" [ngClass]="{ 'has-error': f.submitted && !warehouseName.valid }">
+              <label for="warehouseName">Warehouse Name</label>
+              <input type="text" class="form-control" name="warehouseName" placeholder="Warehouse Name"
+                [(ngModel)]="model.warehouseName" #warehouseName="ngModel" required [disabled]="true" />
+              <div *ngIf="f.submitted && !warehouseName.valid && !disableFields" class="help-block">Warehouse Name is
+                required</div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-6" [ngClass]="{ 'has-error': f.submitted && !commodityCode.valid }">
+              <label for="commodityCode">Commodity Code</label>
+              <input type="text" class="form-control" name="commodityCode" placeholder="Commodity Code"
+                [(ngModel)]="model.commodityCode" #commodityCode="ngModel" required [disabled]="true" />
+              <div *ngIf="f.submitted && !commodityCode.valid && !disableFields" class="help-block">Commodity Code is
+                required</div>
+            </div>
+            
+            <div class="col-sm-6" [ngClass]="{ 'has-error': f.submitted && !commodityName.valid }">
+              <label for="warehouseName">Commodity Name</label>
+              <input type="text" class="form-control" name="commodityName" placeholder="Commodity Name"
+                [(ngModel)]="model.commodityName" #commodityName="ngModel" required [disabled]="true" />
+              <div *ngIf="f.submitted && !commodityName.valid && !disableFields" class="help-block">Commodity Name is
+                required</div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-6" [ngClass]="{ 'has-error': f.submitted && !clientId.valid }">
+              <label for="clientId">Client Id</label>
+              <input type="text" class="form-control" name="clientId" placeholder="Client Id"
+                [(ngModel)]="model.clientId" #clientId="ngModel" required [disabled]="true" />
+              <div *ngIf="f.submitted && !clientId.valid && !disableFields" class="help-block">Client Id is
+                required</div>
+            </div>
+            
+            <div class="col-sm-6" [ngClass]="{ 'has-error': f.submitted && !clientName.valid }">
+              <label for="clientName">Client Name</label>
+              <input type="text" class="form-control" name="clientName" placeholder="Client Name"
+                [(ngModel)]="model.clientName" #clientName="ngModel" required [disabled]="true" />
+              <div *ngIf="f.submitted && !clientName.valid && !disableFields" class="help-block">Client Name is
+                required</div>
+            </div>
+          </div>
+         
+          <div class="form-group row" *ngIf="depositView">
+            <div class="col-sm-6">
+              <label for="currentPacks">Available Deposit Bags</label>
+              <input type="currentPacks" class="form-control" name="currentPacks" placeholder="Deposit Bags"
+                [(ngModel)]="model.currentPacks" #currentPacks="ngModel" required [disabled]="true" />
+             
+            </div>
+            <div class="col-sm-6">
+              <label for="currenyQty">Available Deposit Quantity</label>
+              <input type="currenyQty" class="form-control" name="currenyQty" placeholder="Deposit Quantity"
+                [(ngModel)]="model.currenyQty" #currenyQty="ngModel" required [disabled]="true"
+                (blur)="setNetQty()" />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-6" [ngClass]="{ 'has-error': f.submitted && !packType.valid }">
+              <label for="packType">Pack Type</label>
+              <input type="text" class="form-control" name="packType" placeholder="Pack Type"
+                [(ngModel)]="model.packType" #packType="ngModel" required [disabled]="true" />
+              <div *ngIf="f.submitted && !packType.valid && !disableFields" class="help-block">Pack Type is required
+              </div>
+            </div>
+            
+            <div class="col-sm-6" [ngClass]="{ 'has-error': f.submitted && !withdrawalDate.valid }">
+              <label for="withdrawalDate">Withdrawal Date</label>
+              <input type="text" class="form-control" name="withdrawalDate" placeholder="MM/dd/yyyy"
+              [(ngModel)]="model.withdrawalDate" #withdrawalDate="ngModel" required [disabled]="disableFields" />
+            <div *ngIf="f.submitted && !withdrawalDate.valid && !disableFields" class="help-block">Withdrawal Date is
+              required</div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-6" [ngClass]="{ 'has-error': f.submitted && !withDrawalNoOfBags.valid }">
+              <label for="withDrawalNoOfBags">Withdrawal Packs</label>
+              <input type="number" class="form-control" name="withDrawalNoOfBags" placeholder="Withdrawal Packs"
+                [(ngModel)]="model.withDrawalNoOfBags" #withDrawalNoOfBags="ngModel" required [disabled]="disableFields" />
+                <div *ngIf="f.submitted && !withDrawalNoOfBags.valid && !disableFields" class="help-block">Withdrawal Packs is
+                  required</div>
+            </div>
+            
+                <div class="col-sm-6" [ngClass]="{ 'has-error': f.submitted && !withdrawalQuantity.valid }">
+              <label for="withdrawalQuantity">Withdrawal Quantity</label>
+              <input type="number" class="form-control" name="withdrawalQuantity" placeholder="Withdrawal Quantity"
+                [(ngModel)]="model.withdrawalQuantity" #withdrawalQuantity="ngModel" required [disabled]="disableFields" />
+                <div *ngIf="f.submitted && !withdrawalQuantity.valid && !disableFields" class="help-block">Withdrawal Quantity is
+                    required</div>
+            </div>
+          </div>
+          <div class="form-group row">
+
+            <div class="col-sm-6" [ngClass]="{ 'has-error': f.submitted && !uomCode.valid }">
+              <label for="uomCode">Unit Of Measure</label>
+              <input type="text" class="form-control" name="uomCode" placeholder="Unit Of Measure"
+                [(ngModel)]="model.uomCode" #uomCode="ngModel" required [disabled]="true" />
+              <div *ngIf="f.submitted && !uomCode.valid && !disableFields" class="help-block">Unit of Measure is
+                required</div>
+            </div>
+            <div class="col-sm-6"></div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-9"></div>
+              <div class="col-sm-1">
+                <button [disabled]="loading" class="btn btn-primary px-4 float-right"
+                  *ngIf="!disableFields && saveEnable">Save</button>
+                 
+                <button [disabled]="loading" class="btn btn-primary px-4 float-right"
+                  *ngIf="disableFields && submitEnable && isWhUser" (click)="edit(f)">Submit</button></div>
+              <div class="col-sm-1">
+                <button [disabled]="loading" class="btn btn-primary px-4 float-right"
+                  *ngIf="disableFields && !viewEnable && isWhUser" (click)="discard(f)">Discard</button>
+                <button class="btn btn-primary px-4 float-right" *ngIf="disableFields && viewEnable && isWhUser"
+                  (click)="enableCreate(f)">Add
+                  New</button></div>
+            <div class="col-sm-1">
+              <button class="btn btn-primary px-4 float-right" (click)="viewWithdrawals(f)">View</button>
+            </div>
+            <img *ngIf="loading"
+              src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+
+          </div>
+        </form>
+      </div>
+      <!--search div starts here-->
+      <div name="searchDiv" *ngIf="searchOpen">
+        <form name="searchForm" (ngSubmit)="getRecordsOnInit(searhModel)" #f="ngForm">
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="warehouseCode">Warehouse Code</label>
+              <input type="text" class="form-control" name="warehouseCode" placeholder="Warehouse Code"
+                [(ngModel)]="searhModel.warehouseCode" #warehouseCode="ngModel" />
+
+            </div>
+            <div class="col-sm-6">
+              <label for="warehouseName">Warehouse Name</label>
+              <input type="text" class="form-control" name="warehouseName" placeholder="Warehouse Name"
+                [(ngModel)]="searhModel.warehouseName" #warehouseName="ngModel" />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="commodityCode">Commodity Code</label>
+              <input type="text" class="form-control" name="commodityCode" placeholder="Commodity Code"
+                [(ngModel)]="searhModel.commodityCode" #commodityCode="ngModel" />
+
+            </div>
+            <div class="col-sm-6">
+              <label for="warehouseName">Commodity Name</label>
+              <input type="text" class="form-control" name="commodityName" placeholder="Commodity Name"
+                [(ngModel)]="searhModel.commodityName" #commodityName="ngModel" />
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="clientId">Client Id</label>
+              <input type="text" class="form-control" name="clientId" placeholder="Client Id"
+                [(ngModel)]="searhModel.clientId" #clientId="ngModel" />
+
+            </div>
+            <div class="col-sm-6">
+              <label for="clientName">Client Name</label>
+              <input type="text" class="form-control" name="clientName" placeholder="Client Name"
+                [(ngModel)]="searhModel.clientName" #clientName="ngModel" />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="startDate">From Date</label>
+
+              <input type="text" class="form-control" name="startDate" placeholder="MM/dd/yyyy"
+                [(ngModel)]="searhModel.startDate" #startDate="ngModel" />
+
+            </div>
+            <div class="col-sm-6">
+              <label for="endDate">End Date</label>
+              <input type="text" class="form-control" name="endDate" placeholder="MM/dd/yyyy"
+                [(ngModel)]="searhModel.endDate" #startDate="ngModel" />
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-10"></div>
+            <div class="col-sm-1">
+              <button class="btn btn-primary px-4 float-right">Search</button></div>
+            <div class="col-sm-1">
+              <button class="btn btn-primary px-4 float-right" (click)="createNewForm(f)">Add</button>
+            </div>
+          </div>
+          <div style="box-align:center">
+            <label style="text-align: center">Withdrawal View</label>
+            <div>
+              <input type="text" (input)="onQuickFilterChanged()" id="quickFilter" placeholder="quick filter..." />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              Please select a record to edit or delete
+            </div>
+            <div style="height: 300px">
+            <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham"
+              [paginationAutoPageSize]="true" [pagination]="true" [rowData]="rowData" [columnDefs]="columnDefs"
+              [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="rowSelection"
+              (gridReady)="onGridReady($event)">
+            </ag-grid-angular>
+          </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-8"></div>
+            <div class="col-sm-2">
+              <button class="btn btn-primary px-4 float-right" (click)="editRecord()">Edit Record</button></div>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
